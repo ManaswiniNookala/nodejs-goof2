@@ -4,7 +4,10 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/your_github_username/8.2CDevSecOps.git'
+                // Replace 'github-creds' with your actual Jenkins credential ID
+                git branch: 'main',
+                    credentialsId: 'github-creds',
+                    url: 'https://github.com/ManaswiniNookala/8.2CDevSecOps.git'
             }
         }
 
@@ -16,19 +19,19 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npm test || exit /b 0' // Allows pipeline to continue even if tests fail
+                bat 'npm test || exit /b 0' // Continue even if tests fail
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
-                bat 'npm run coverage || exit /b 0'
+                bat 'npm run coverage || exit /b 0' // Continue even if script doesn't exist
             }
         }
 
         stage('NPM Audit (Security Scan)') {
             steps {
-                bat 'npm audit || exit /b 0'
+                bat 'npm audit || exit /b 0' // Show vulnerabilities without failing the build
             }
         }
     }
