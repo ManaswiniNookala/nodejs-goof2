@@ -14,25 +14,25 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                bat 'npm install'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'npm test || true'
+                bat 'npm test || exit /b 0'
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
-                sh 'npm run coverage || true'
+                bat 'npm run coverage || exit /b 0'
             }
         }
 
         stage('NPM Audit (Security Scan)') {
             steps {
-                sh 'npm audit || true'
+                bat 'npm audit || exit /b 0'
             }
         }
 
@@ -41,17 +41,10 @@ pipeline {
                 SONAR_TOKEN = credentials('SONAR_TOKEN')
             }
             steps {
-                // Download SonarScanner
-                sh '''
-                    curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006.zip
-                    unzip -o sonar-scanner.zip
-                    mv sonar-scanner-5.0.1.3006 sonar-scanner
-                '''
-
-                // Run SonarScanner
-                sh '''
-                    ${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                    -Dsonar.login=$SONAR_TOKEN
+                bat '''
+                curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
+                powershell -Command "Expand-Archive -Force sonar-scanner.zip sonar-scanner"
+                sonar-scanner\\bin\\sonar-scanner.bat -Dsonar.login=%SONAR_TOKEN%
                 '''
             }
         }
