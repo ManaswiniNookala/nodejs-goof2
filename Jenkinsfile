@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/ManaswiniNookala/8.2CDevSecOps.git',
+                    url: 'https://github.com/ManaswiniNookala/nodejs-goof2',
                     credentialsId: 'github-creds' // Must match the ID in Jenkins Credentials Manager
             }
         }
