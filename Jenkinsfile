@@ -26,6 +26,7 @@ pipeline {
 
         stage('Generate Coverage Report') {
             steps {
+                // Optional: Remove or update if your package.json doesn’t include a coverage script
                 bat 'npm run coverage || exit /b 0' 
             }
         }
@@ -43,8 +44,8 @@ pipeline {
                 powershell -Command "Expand-Archive -Force sonar-scanner.zip sonar-scanner-extracted"
                 cd sonar-scanner-extracted\\sonar-scanner-5.0.1.3006-windows\\bin
                 sonar-scanner.bat ^
-                  -Dsonar.projectKey=manaswini_nodejs-goof2 ^
-                  -Dsonar.organization=manaswini-org ^
+                  -Dsonar.projectKey=manaswininookala_nodejs-goof2 ^
+                  -Dsonar.organization=manaswininookala ^
                   -Dsonar.host.url=https://sonarcloud.io ^
                   -Dsonar.login=%SONAR_TOKEN%
                 '''
@@ -53,7 +54,7 @@ pipeline {
 
         stage('Post Build') {
             steps {
-                echo 'Pipeline completed. Archiving or notifications can be added here.'
+                echo '✅ Pipeline execution complete. You can add archiving or notification steps here.'
             }
         }
     }
