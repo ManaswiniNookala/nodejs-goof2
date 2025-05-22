@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        SONAR_SCANNER_HOME = 'sonar-scanner'
+        SONAR_SCANNER_HOME = 'sonar-scanner-extracted\\sonar-scanner-5.0.1.3006-windows'
     }
 
     stages {
@@ -20,13 +20,13 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'npm test || exit /b 0'
+                bat 'npm test || exit /b 0' // Prevent build failure if test fails
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
-                bat 'npm run coverage || exit /b 0'
+                bat 'npm run coverage || exit /b 0' // Safe fail
             }
         }
 
@@ -43,8 +43,9 @@ pipeline {
             steps {
                 bat '''
                 curl -sSLo sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-windows.zip
-                powershell -Command "Expand-Archive -Force sonar-scanner.zip sonar-scanner"
-                sonar-scanner\\bin\\sonar-scanner.bat -Dsonar.login=%SONAR_TOKEN%
+                powershell -Command "Expand-Archive -Force sonar-scanner.zip sonar-scanner-extracted"
+                cd sonar-scanner-extracted\\sonar-scanner-5.0.1.3006-windows\\bin
+                sonar-scanner.bat -Dsonar.login=%SONAR_TOKEN%
                 '''
             }
         }
